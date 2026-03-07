@@ -1,0 +1,30 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.Identifier
+.well-known/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.history/
+
+# PHP/Composer
+vendor/
+composer.phar
+.php-cs-fixer.cache
+.phpunit.result.cache
+
+# Project specific
+data/analytics.sqlite
+data/settings.json
+# data/tests/*.json
+# media/
