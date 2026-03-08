@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth_guard.php';
+requireDeviceAuth();
 
 $settings = getSettings();
 $tests    = getTests();
@@ -391,6 +393,34 @@ $totalCats      = count($categories);
             border-top: 1px solid var(--border);
         }
 
+        /* Logout Floating button */
+        .logout-float-btn {
+            position: fixed;
+            right: 4.5rem;
+            bottom: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: calc(var(--floating-btn-size) * 0.42);
+            width: var(--floating-btn-size);
+            height: var(--floating-btn-size);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            z-index: 50;
+            padding: 0;
+            box-sizing: border-box;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .logout-float-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            color: #E17055;
+        }
+
         /* Admin Floating button */
         .admin-float-btn {
             position: fixed;
@@ -450,6 +480,16 @@ $totalCats      = count($categories);
         🛡️
     </a>
     <?php endif; ?>
+
+    <!-- Logout button -->
+    <button class="logout-float-btn" title="Logout" onclick="deviceLogout()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+    </button>
 
     <!-- ══ HERO ══════════════════════════════ -->
     <?php if ($showIndexHero || $showIndexHeader): ?>
@@ -566,6 +606,23 @@ $totalCats      = count($categories);
         const DEFAULT_COLOR = '<?= e($themeColor) ?>';
     </script>
     <script src="assets/js/theme.js"></script>
+    <script>
+        function deviceLogout() {
+            const token = localStorage.getItem('device_token');
+            if (token) {
+                fetch('api/device/logout.php', {
+                    method: 'GET',
+                    headers: { 'X-Device-Token': token }
+                }).finally(() => {
+                    // Keep token in localStorage - don't remove it
+                    // On next visit, auto-login will detect the token and restore the session
+                    window.location.href = 'login.php';
+                });
+            } else {
+                window.location.href = 'login.php';
+            }
+        }
+    </script>
 
     <?php if ($contentProtection): ?>
     <script>

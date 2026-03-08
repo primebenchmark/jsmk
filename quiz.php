@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth_guard.php';
+requireDeviceAuth();
 
 $settings = getSettings();
 $testId = $_GET['id'] ?? '';
